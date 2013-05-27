@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>test-async</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+</head>
+<body>
+<script type="text/javascript">
+    function SyncFunc(funcList, cb){
+        this.funcList = funcList;
+        this.callback = cb;
+    };
+
+    SyncFunc.prototype = {
+        constructor: SyncFunc,
+        fire: function(){
+            var that = this;
+            var curFunc = that.funcList.shift();
+            if(curFunc){
+                curFunc['func'](function(c){
+                    if(curFunc['cb']){
+                        curFunc['cb'](function(c){
+                            that.fire();
+                        });
+                    }else{
+                        if(that.funcList.length){
+                            that.fire();
+                        }else{
+                            that.callback(that);
+                        }
+                    }
+                });
+            }else{
+                that.callback(that);
+            }
+        }
+    }；
+
+		function f1(cb){
+        setTimeout(function(){
+            console.log('f1 func 延迟3000');
+            cb();
+        }, 3000);
+    }
+
+    function f2(cb){
+        setTimeout(function(){
+            console.log('f2 func 延迟3000');
+            cb();
+        }, 3000);
+    }
+
+    function f3(cb){
+        setTimeout(function(){
+            console.log('f3 func 延迟3000');
+            cb();
+        }, 3000);
+    }
+
+    function f4(cb){
+        setTimeout(function(){
+            console.log('f4 func 延迟3000');
+            cb();
+        }, 3000);
+    }
+
+
+    var sf = new SyncFunc([
+            {
+                func: f1,
+                cb: function(cb){
+                    setTimeout(function(){
+                        console.log('f1 func 的回调函数  延迟1000');
+                        cb();
+                    }, 1000);
+                }
+            },
+            {
+                func: f2,
+                cb: function(cb){
+                    setTimeout(function(){
+                        console.log('f2 func 的回调函数  延迟2000');
+                        cb();
+                    }, 2000)
+                }
+            },
+            {
+                func: f3,
+                cb: function(cb){
+                    setTimeout(function(){
+                        console.log('f3 func 的回调函数  延迟3000');
+                        cb();
+                    }, 3000)
+                }
+            },
+            {
+                func: f4,
+                cb: function(cb){
+                    setTimeout(function(){
+                        console.log('f4 func 的回调函数  延迟2000');
+                        cb();
+                    }, 2000)
+                }
+            }
+        ]
+        , function(d){
+            console.log('总的回调函数 over');
+        }
+    );
+
+    sf.fire();
+
+</script>
+</body>
+</html>
