@@ -37,35 +37,35 @@
                 that.callback(that);
             }
         }
-    }；
+    };
 
 		function f1(cb){
         setTimeout(function(){
             console.log('f1 func 延迟3000');
             cb();
         }, 3000);
-    }
+    };
 
     function f2(cb){
         setTimeout(function(){
             console.log('f2 func 延迟3000');
             cb();
         }, 3000);
-    }
+    };
 
     function f3(cb){
         setTimeout(function(){
             console.log('f3 func 延迟3000');
             cb();
         }, 3000);
-    }
+    };
 
     function f4(cb){
         setTimeout(function(){
             console.log('f4 func 延迟3000');
             cb();
         }, 3000);
-    }
+    };
 
 
     var sf = new SyncFunc([
